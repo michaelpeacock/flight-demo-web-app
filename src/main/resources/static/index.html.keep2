@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <script src="https://cesium.com/downloads/cesiumjs/releases/1.78/Build/Cesium/Cesium.js"></script>
+  <link href="https://cesium.com/downloads/cesiumjs/releases/1.78/Build/Cesium/Widgets/widgets.css" rel="stylesheet">
+  <link href="/main.css" rel="stylesheet">
+  <script src="/webjars/jquery/jquery.min.js"></script>
+  <script src="/webjars/sockjs-client/sockjs.min.js"></script>
+  <script src="/webjars/stomp-websocket/stomp.min.js"></script>
+  <script src="/app.js"></script>
+</head>
+<body>
+    <style>
+    @import url(/bucket.css);
+
+    #toolbar {
+      background: rgba(42, 42, 42, 0.8);
+      padding: 4px;
+      border-radius: 4px;
+      position: absolute;
+      top: 5px; left: 5px;
+      font-size: 20px;
+    }
+
+    #toolbar input {
+      vertical-align: middle;
+      padding-top: 2px;
+      padding-bottom: 2px;
+    }
+
+    #toolbar table tr {
+      transform: translateY(0);
+      transition: transform 0.4s ease-out;
+    }
+
+    #toolbar table tr.up {
+      transform: translateY(33px);
+      transition: none;
+    }
+
+    #toolbar table tr.down {
+      transform: translateY(-33px);
+      transition: none;
+    }
+  </style>
+
+ <div id="cesiumContainer" ></div>
+<div id="toolbar">
+        <table >
+            <thead>
+            <tr>
+                <th>Dashboard Data</th>
+            </tr>
+            </thead>
+            <tbody id="greetings">
+            </tbody>
+        </table>
+    </div>
+</div>
+<script>
+    var viewer = new Cesium.Viewer('cesiumContainer', {
+      timeline : false,
+      animation : false
+    });
+  </script>
+<script src="/flights.js"></script>
+
+</body>
+</html>

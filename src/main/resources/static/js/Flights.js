@@ -1,7 +1,3 @@
-
-
-
-
 function handleFlightUpdate(flight) {
     console.log("handle flight update: flight count");
     flight.forEach(flight => {

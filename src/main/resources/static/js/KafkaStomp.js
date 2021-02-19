@@ -4,15 +4,7 @@ let dashboardList = new Map();
 connect();
 
 function setConnected(connected) {
-    $("#connect").prop("disabled", connected);
-    $("#disconnect").prop("disabled", !connected);
-    if (connected) {
-        $("#conversation").show();
-    }
-    else {
-        $("#conversation").hide();
-    }
-    $("#greetings").html("");
+    $("#dashboard-data").html("");
 }
 
 function connect() {
@@ -21,11 +13,8 @@ function connect() {
     stompClient.connect({}, function (frame) {
         setConnected(true);
         console.log('Connected: ' + frame);
-        stompClient.subscribe('/topic/greetings', function (greeting) {
-            showGreeting(JSON.parse(greeting.body).content);
-        });
         stompClient.subscribe('/topic/dashboard-data', function (dashboard) {
-            showGreeting(JSON.parse(dashboard.body));            
+            updateDashboard(JSON.parse(dashboard.body));            
         });
         stompClient.subscribe('/topic/flight-data', function (flight) {
             handleFlightUpdate(JSON.parse(flight.body));
@@ -41,11 +30,7 @@ function disconnect() {
     console.log("Disconnected");
 }
 
-function sendName() {
-    stompClient.send("/app/hello", {}, JSON.stringify({'name': $("#name").val()}));
-}
-
-function showGreeting(message) {
+function updateDashboard(message) {
     console.log("message: " + message);
     dashboardList.set(message.dashboardTitle, message.dashboardValue);
 
@@ -54,7 +39,7 @@ function showGreeting(message) {
         console.log(key + ' = ' + value);
         content += "<tr><td>" + key + ": " + value;
     }
-    $("#greetings").html(content);
+    $("#dashboard-data").html(content);
 }
 
 
