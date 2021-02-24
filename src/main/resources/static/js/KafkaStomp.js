@@ -19,6 +19,9 @@ function connect() {
         stompClient.subscribe('/topic/flight-data', function (flight) {
             handleFlightUpdate(JSON.parse(flight.body));
         });
+        stompClient.subscribe('/topic/filtered-flight-data', function (flight) {
+            handleFilteredFlightUpdate(JSON.parse(flight.body));
+        });
     });
 }
 

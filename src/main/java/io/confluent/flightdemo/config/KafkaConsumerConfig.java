@@ -15,6 +15,7 @@ import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
 import org.springframework.kafka.support.serializer.JsonDeserializer;
 
 import io.confluent.flightdemo.models.DashboardModel;
+import io.confluent.flightdemo.models.FilteredFlightModel;
 import io.confluent.flightdemo.models.FlightModel;
 
 @EnableKafka
@@ -65,6 +66,21 @@ public class KafkaConsumerConfig {
     public ConcurrentKafkaListenerContainerFactory<String, FlightModel> flightKafkaListenerContainerFactory() {
         ConcurrentKafkaListenerContainerFactory<String, FlightModel> factory = new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(flightConsumerFactory());
+        return factory;
+    }
+ 
+    public ConsumerFactory<String, FilteredFlightModel> filteredFlightConsumerFactory() {
+        Map<String, Object> props = new HashMap<>();
+        props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapAddress);
+        props.put(ConsumerConfig.GROUP_ID_CONFIG, "filtered-flight");
+        return new DefaultKafkaConsumerFactory<>(props, new StringDeserializer(), 
+            new JsonDeserializer<>(FilteredFlightModel.class));
+    }
+
+   @Bean
+    public ConcurrentKafkaListenerContainerFactory<String, FilteredFlightModel> filteredFlightKafkaListenerContainerFactory() {
+        ConcurrentKafkaListenerContainerFactory<String, FilteredFlightModel> factory = new ConcurrentKafkaListenerContainerFactory<>();
+        factory.setConsumerFactory(filteredFlightConsumerFactory());
         return factory;
     }
 }

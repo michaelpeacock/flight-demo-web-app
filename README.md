@@ -5,11 +5,12 @@ confluent local services start
 confluent local services connect stop
 
 ### Create Topics
-kafka-topics --bootstrap-server localhost:9092 --create --topic flight-data
+kafka-topics --bootstrap-server localhost:9092 --create --topic flights
 kafka-topics --bootstrap-server localhost:9092 --create --topic dashboard-data
 
 ### Start the OpenSky Connect app
 connect-standalone config/worker.properties config/connect-standalone.properties
+confluent local load OpenSkySourceConnector -- -d connect-standalone.properties
 
 ### Consumers
 kafka-console-consumer --bootstrap-server localhost:9092 --topic dashboard-data
@@ -28,3 +29,45 @@ curl -X "POST" "http://localhost:8088/query" \
   "ksql": "SELECT * FROM FLIGHT_DATA WHERE id=\'06a2de\';",
   "streamsProperties": {"ksql.streams.auto.offset.reset": "earliest"}
 }'
+
+
+CREATE STREAM flights (
+    `id` VARCHAR, 
+    `callSign` VARCHAR, 
+    `originCountry` VARCHAR,
+  	`updateTime` DOUBLE,
+  	`latitude` DOUBLE,
+  	`longitude` DOUBLE,
+  	`altitude` DOUBLE,
+  	`speed` DOUBLE,
+  	`heading` DOUBLE
+  ) WITH (
+    KAFKA_TOPIC='flights',
+    PARTITIONS=1,
+    VALUE_FORMAT='JSON'
+  );
+
+ CREATE STREAM FLIGHT_DATA WITH (KAFKA_TOPIC='flight-data', PARTITIONS=1, REPLICAS=1) AS SELECT
+  *,
+  1 UNITY
+FROM FLIGHTS
+EMIT CHANGES;
+
+CREATE STREAM FENCE_RAW
+  (type VARCHAR, "properties" MAP<VARCHAR, VARCHAR>,
+   geometry MAP<VARCHAR, VARCHAR>, _raw_data VARCHAR)
+WITH
+  (kafka_topic='fence_raw', value_format='JSON', PARTITIONS=1);
+
+CREATE STREAM FENCE WITH (KAFKA_TOPIC='fence', PARTITIONS=1, REPLICAS=1) AS SELECT
+  *,
+  1 UNITY
+FROM FENCE_RAW FENCE_RAW
+EMIT CHANGES;
+
+CREATE STREAM FLIGHT_ALERT WITH (KAFKA_TOPIC='flight_alert', PARTITIONS=1, REPLICAS=1) AS SELECT
+  *
+FROM FLIGHT_DATA A
+INNER JOIN FENCE F WITHIN 7 DAYS ON ((A.UNITY = F.UNITY))
+WHERE GEO_CONTAINED(A.`latitude`, A.`longitude`, F._RAW_DATA)
+EMIT CHANGES;

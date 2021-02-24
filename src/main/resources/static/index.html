@@ -9,6 +9,7 @@
     <script src="/webjars/sockjs-client/sockjs.min.js"></script>
     <script src="/webjars/stomp-websocket/stomp.min.js"></script>
     <script src="js/KafkaStomp.js"></script>
+    <script src="js/GeoHelper.js"></script>
 
     <style>
          @import url(css/DrawHelper.css);
@@ -85,6 +86,7 @@
 
         // start the draw helper to enable shape creation and editing
         var drawHelper = new DrawHelper(viewer);
+ 
         var toolbar = drawHelper.addToolbar(document.getElementById("toolbar"), {
             buttons: ['marker', 'polyline', 'polygon', 'circle', 'extent']
         });
@@ -131,6 +133,9 @@
             polygon.addListener('onEdited', function(event) {
                 loggingMessage('Polygon edited, ' + event.positions.length + ' points');
             });
+            var geojson = createGeoJSON("Polygon", event.positions);
+            console.log("geojson: %O", geojson);
+            stompClient.send("/app/fence-data", {}, JSON.stringify(geojson));
 
         });
         toolbar.addListener('circleCreated', function(event) {
@@ -176,6 +181,12 @@
         </thead>
         <tbody id="dashboard-data">
         </tbody>
+        <tr><td>&nbsp;</td></tr>
+        <tr>
+            <th>Layer Control</th>
+        </tr>
+       <tr><td><input type="checkbox" name="global_flights" checked onclick='handleGlobalClick(this);'/>&nbsp;Global Flights</td></tr>
+        <tr><td><input type="checkbox" name="filtered_flights" onclick='handleFilteredClick(this);'/>&nbsp;Filtered Flights</td></tr>
     </table>
 </div>
 <script src="js/Flights.js"></script>

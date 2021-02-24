@@ -883,6 +883,7 @@ var DrawHelper = (function() {
                     // first click
                     if(positions.length == 0) {
                         positions.push(cartesian.clone());
+                        console.log("positions 1st point %O", positions);
                         markers.addBillboard(positions[0]);
                     }
                     if(positions.length >= minPoints) {
@@ -892,6 +893,8 @@ var DrawHelper = (function() {
                     // add new point to polygon
                     // this one will move with the mouse
                     positions.push(cartesian);
+                    console.log("positions left click %O", positions);
+                    
                     // add marker at the new position
                     markers.addBillboard(cartesian);
                 }
@@ -931,10 +934,19 @@ var DrawHelper = (function() {
                 } else {
                     var cartesian = scene.camera.pickEllipsoid(position, ellipsoid);
                     if (cartesian) {
+                        // remove the mouse move
+                        positions.pop();
+
+                        // remove the left click
+                        positions.pop();
+                        
+                        console.log("positions double click after pop%O", positions);
+
                         _self.stopDrawing();
                         if(typeof options.callback == 'function') {
                             // remove overlapping ones
                             var index = positions.length - 1;
+                            console.log("positions double click %O", positions);
                             options.callback(positions);
                         }
                     }
