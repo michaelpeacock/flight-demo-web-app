@@ -26,12 +26,12 @@ This project has several dependencies including:
   5. In a web browers, go to http://localhost:8080 
 
 ## Main Dashboard
-![alt text](https://github.com/michaelpeacock/flight-demo-web-app/tree/main/src/main/resources/static/images/global-flights.png "Global Flights")
+![alt text](https://github.com/michaelpeacock/flight-demo-web-app/raw/main/src/main/resources/static/images/global-flights.png "Global Flights")
 
 ## Filtered Geofences
   1. Uncheck the Global Flights option
   2. Select the Filtered Flights option
   3. Draw a polygon around the region to filter flights - click for each point, double click to close the polygon
 
-![alt text](https://github.com/michaelpeacock/flight-demo-web-app/tree/main/src/main/resources/static/images/filtered-flights.png "Filtered Flights")
-![alt text](https://github.com/michaelpeacock/flight-demo-web-app/tree/main/src/main/resources/static/images/filtered-flights.png "Filtered Flights")
+![alt text](https://github.com/michaelpeacock/flight-demo-web-app/raw/main/src/main/resources/static/images/filtered-flights1.png "Filtered Flights")
+![alt text](https://github.com/michaelpeacock/flight-demo-web-app/raw/main/src/main/resources/static/images/filtered-flights2.png "Filtered Flights")
