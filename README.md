@@ -33,5 +33,5 @@ This project has several dependencies including:
   2. Select the Filtered Flights option
   3. Draw a polygon around the region to filter flights - click for each point, double click to close the polygon
 
-![alt text](https://github.com/michaelpeacock/flight-demo-web-app/raw/main/src/main/resources/static/images/filtered-flights1.png "Filtered Flights")
-![alt text](https://github.com/michaelpeacock/flight-demo-web-app/raw/main/src/main/resources/static/images/filtered-flights2.png "Filtered Flights")
+![alt text](https://github.com/michaelpeacock/flight-demo-web-app/raw/main/src/main/resources/static/images/filtered-flights1.png "Filtered Philly Flights")
+![alt text](https://github.com/michaelpeacock/flight-demo-web-app/raw/main/src/main/resources/static/images/filtered-flights2.png "Filtered Florida Flights")
