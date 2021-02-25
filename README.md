@@ -3,14 +3,17 @@
 
 ## Description
 
-This project provides a demo of Kafka capabilities including Connect, Kafka Streams, and ksqlDB using live flight data from [OpenSky Network](https://opensky-network.org/).
+This project provides a demo of Kafka capabilities including Connect, Kafka Streams, and ksqlDB using live flight data from [OpenSky Network](https://opensky-network.org/). This project has several dependencies including:
+
+     * [KSQLGeo](https://github.com/wlaforest/KSQLGeo) - geospatial UDFs for ksqlDB
+     * [kafka-connect-opensky](https://github.com/nbuesing/kafka-connect-opensky) - OpenSky Network Kafka Connector
+     * [Cesium](https://github.com/CesiumGS/cesium) - WebGL geospatial toolkit
 
 
 ### Start Confluent Components
 confluent local services start
 
-### Stop Connect since we are running a local connect app
-confluent local services connect stop
+### Start the Demo Applications
 
 ### Create Topics
 kafka-topics --bootstrap-server localhost:9092 --create --topic flights
