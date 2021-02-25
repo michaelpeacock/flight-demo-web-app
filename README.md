@@ -25,9 +25,11 @@ confluent local load OpenSkySourceConnector -- -d ../config/connect-standalone.p
 
 #### Create Topics - all others created dynamically
 kafka-topics --bootstrap-server localhost:9092 --create --topic flights
+
 kafka-topics --bootstrap-server localhost:9092 --create --topic dashboard-data
 
 #### Load ksql Streams
+```sql
 SET 'auto.offset.reset'='earliest';
 
 CREATE STREAM flights (
