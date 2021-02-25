@@ -8,6 +8,7 @@ This project provides a demo of Kafka capabilities including Connect, Kafka Stre
   * [KSQLGeo](https://github.com/wlaforest/KSQLGeo) - geospatial UDFs for ksqlDB
   * [KafkaGeoDemo](https://github.com/wlaforest/KafkaGeoDemo) - geo demo used for installing ksqlDB UDFs
   * [kafka-connect-opensky](https://github.com/nbuesing/kafka-connect-opensky) - OpenSky Network Kafka Connector
+  * [Kafka Flight Demo Streams](https://github.com/michaelpeacock/kafka-flight-demo-streams) - Kafka Streams applications for transformation and dashboard
   * [Cesium](https://github.com/CesiumGS/cesium) - WebGL geospatial toolkit
 
 
