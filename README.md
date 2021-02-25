@@ -1,73 +1,37 @@
-### Start Confluent Components
-confluent local services start
-
-### Stop Connect since we are running a local connect app
-confluent local services connect stop
-
-### Create Topics
-kafka-topics --bootstrap-server localhost:9092 --create --topic flights
-kafka-topics --bootstrap-server localhost:9092 --create --topic dashboard-data
-
-### Start the OpenSky Connect app
-connect-standalone config/worker.properties config/connect-standalone.properties
-confluent local load OpenSkySourceConnector -- -d connect-standalone.properties
-
-### Consumers
-kafka-console-consumer --bootstrap-server localhost:9092 --topic dashboard-data
-
-kafka-console-consumer --bootstrap-server localhost:9092 --topic flights-by-key \
---property value.deserializer=org.apache.kafka.common.serialization.LongDeserializer \
---from-beginning --property print.key=true
-
-### File Sink Connector
-org.apache.kafka.connect.storage.StringConverter
+# Kafka Live Flight Demo
 
 
-curl -X "POST" "http://localhost:8088/query" \
-     -H "Content-Type: application/json; charset=utf-8" \
-     -d $'{
-  "ksql": "SELECT * FROM FLIGHT_DATA WHERE id=\'06a2de\';",
-  "streamsProperties": {"ksql.streams.auto.offset.reset": "earliest"}
-}'
+## Description
+
+This project provides a demo of Kafka capabilities including Connect, Kafka Streams, and ksqlDB using live flight data from [OpenSky Network](https://opensky-network.org/). Global flights are displayed by default. A dashboard of information built using Kafka Streams for aggregation is displayed at the top left. You can also draw a geofence using the polygon tool to display a filtered view of flights within the geofence region.
+
+This project has several dependencies including:
+
+  * [KSQLGeo](https://github.com/wlaforest/KSQLGeo) - geospatial UDFs for ksqlDB
+  * [KafkaGeoDemo](https://github.com/wlaforest/KafkaGeoDemo) - geo demo used for installing ksqlDB UDFs
+  * [kafka-connect-opensky](https://github.com/nbuesing/kafka-connect-opensky) - OpenSky Network Kafka Connector
+  * [Kafka Flight Demo Streams](https://github.com/michaelpeacock/kafka-flight-demo-streams) - Kafka Streams applications for transformation and dashboard
+  * [Cesium](https://github.com/CesiumGS/cesium) - WebGL geospatial toolkit
 
 
-CREATE STREAM flights (
-    `id` VARCHAR, 
-    `callSign` VARCHAR, 
-    `originCountry` VARCHAR,
-  	`updateTime` DOUBLE,
-  	`latitude` DOUBLE,
-  	`longitude` DOUBLE,
-  	`altitude` DOUBLE,
-  	`speed` DOUBLE,
-  	`heading` DOUBLE
-  ) WITH (
-    KAFKA_TOPIC='flights',
-    PARTITIONS=1,
-    VALUE_FORMAT='JSON'
-  );
+## Requirements
+  * Confluent Platform 5.5
+  * Java 11 or higher
 
- CREATE STREAM FLIGHT_DATA WITH (KAFKA_TOPIC='flight-data', PARTITIONS=1, REPLICAS=1) AS SELECT
-  *,
-  1 UNITY
-FROM FLIGHTS
-EMIT CHANGES;
+## Steps to Run the Demo
+  1. Follow the instructions in the kafka-connect-opensky repo to build the full version and then update the connect plug-in path to include it prior to starting the confluent services.
+  2. Follow the instructions KSQLGeo repo to install the ksqlDB UDFs
+  3. run `confluent local services start`
+  4. run `start.sh` script in the scripts folder
+  5. In a web browers, go to http://localhost:8080 
 
-CREATE STREAM FENCE_RAW
-  (type VARCHAR, "properties" MAP<VARCHAR, VARCHAR>,
-   geometry MAP<VARCHAR, VARCHAR>, _raw_data VARCHAR)
-WITH
-  (kafka_topic='fence_raw', value_format='JSON', PARTITIONS=1);
+## Main Dashboard
+![alt text](https://github.com/michaelpeacock/flight-demo-web-app/raw/main/src/main/resources/static/images/global-flights.png "Global Flights")
 
-CREATE STREAM FENCE WITH (KAFKA_TOPIC='fence', PARTITIONS=1, REPLICAS=1) AS SELECT
-  *,
-  1 UNITY
-FROM FENCE_RAW FENCE_RAW
-EMIT CHANGES;
+## Filtered Geofences
+  1. Uncheck the Global Flights option
+  2. Select the Filtered Flights option
+  3. Draw a polygon around the region to filter flights - click for each point, double click to close the polygon
 
-CREATE STREAM FLIGHT_ALERT WITH (KAFKA_TOPIC='flight_alert', PARTITIONS=1, REPLICAS=1) AS SELECT
-  *
-FROM FLIGHT_DATA A
-INNER JOIN FENCE F WITHIN 7 DAYS ON ((A.UNITY = F.UNITY))
-WHERE GEO_CONTAINED(A.`latitude`, A.`longitude`, F._RAW_DATA)
-EMIT CHANGES;
+![alt text](https://github.com/michaelpeacock/flight-demo-web-app/raw/main/src/main/resources/static/images/filtered-flghts1.png "Filtered Philly Flights")
+![alt text](https://github.com/michaelpeacock/flight-demo-web-app/raw/main/src/main/resources/static/images/filtered-flights2.png "Filtered Florida Flights")
