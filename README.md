@@ -1,3 +1,11 @@
+# Kafka Live Flight Demo
+======
+
+## Description
+======
+This project provides a demo of Kafka capabilities including Connect, Kafka Streams, and ksqlDB using live flight data from [OpenSky Network](https://opensky-network.org/).
+
+
 ### Start Confluent Components
 confluent local services start
 
