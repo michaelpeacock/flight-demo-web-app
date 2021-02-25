@@ -16,7 +16,7 @@ This project provides a demo of Kafka capabilities including Connect, Kafka Stre
 
 ## Steps to Run the Demo
     1. Follow the instructions in the kafka-connect-opensky to build the full version and then update the connect plug-in path to include it prior to starting the confluent services.
-    2. run `confluent local services start`
-    3. run `start.sh` script in the scripts folder. You can optionally run each command individually.
+    2. run 'confluent local services start'
+    3. run 'start.sh' script in the scripts folder. You can optionally run each command individually.
 
 
