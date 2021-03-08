@@ -5,6 +5,8 @@
 
 This project provides a demo of Kafka capabilities including Connect, Kafka Streams, and ksqlDB using live flight data from [OpenSky Network](https://opensky-network.org/). Global flights are displayed by default. A dashboard of information built using Kafka Streams for aggregation is displayed at the top left. You can also draw a geofence using the polygon tool to display a filtered view of flights within the geofence region.
 
+![alt text](https://github.com/michaelpeacock/flight-demo-web-app/raw/main/src/main/resources/static/images/FlightDemo.png "Flight Demo")
+
 This project has several dependencies including:
 
   * [KSQLGeo](https://github.com/wlaforest/KSQLGeo) - geospatial UDFs for ksqlDB
